@@ -1,0 +1,25 @@
+{
+  "name": "lafammiweb3",
+  "version": "1.0.0",
+  "description": "A framework for interacting with Ethereum smart contracts using multiple providers and signers",
+  "main": "index.js",
+  "scripts": {
+    "build:contracts": "solcjs --bin --abi --include-path node_modules/ --base-path . -o _build/contracts/ ./contracts/*.sol",
+    "build:all": "npm run build:contracts && tsc",
+    "build": "tsc ",
+    "run:template": "npm run build && ts-node src/templates/exampleTemplate.ts",
+    "test": "mocha -r ts-node/register 'src/**/*.test.ts'"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/mocha": "^10.0.7",
+    "@types/node": "^20.14.10",
+    "ethers": "^6.13.1",
+    "mocha": "^10.6.0",
+    "solc": "^0.8.26",
+    "ts-mocha": "^10.0.0",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.5.3"
+  }
+}

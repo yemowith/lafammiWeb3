@@ -1,0 +1,1 @@
+[{"anonymous":false,"inputs":[{"indexed":true,"internalType":"address","name":"from","type":"address"},{"indexed":false,"internalType":"uint256","name":"value","type":"uint256"}],"name":"SomeEvent","type":"event"},{"inputs":[{"internalType":"uint256","name":"value","type":"uint256"}],"name":"someMethod","outputs":[],"stateMutability":"nonpayable","type":"function"}]

@@ -1,0 +1,27 @@
+{
+  "providers": [
+    {
+      "name": "tenderly",
+      "url": "https://virtual.polygon.rpc.tenderly.co/cc0e0426-a956-4dd3-a90a-751090f250b1"
+    },
+    {
+      "name": "alchemy",
+      "url": "https://eth-mainnet.alchemyapi.io/v2/YOUR_ALCHEMY_API_KEY"
+    }
+  ],
+  "contracts": [
+    {
+      "name": "MyContract",
+      "address": "0xYourContractAddress",
+      "abi": "contracts_MyContract_sol_MyContract.abi",
+      "provider": "tenderly"
+    }
+  ],
+  "signers": [
+    {
+      "name": "signer1",
+      "privateKey": "0x3e33585e7e0f7c8340f2734b3cb82a82c3a23cbd29eebcb564f0a3edac4ff5c7",
+      "provider": "tenderly"
+    }
+  ]
+}
