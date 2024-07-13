@@ -1,8 +1,8 @@
 // src/contracts/ContractManager.ts
 
-import { ethers } from "ethers";
+import { ethers, JsonRpcProvider } from "ethers";
 import ProviderManager from "../managers/ProviderManager";
-import { ContractConfig } from "../utils/types";
+import { ContractConfig, DeployedContractConfig } from "../utils/types";
 import * as fs from "fs";
 import * as path from "path";
 
@@ -26,6 +26,44 @@ class ContractManager {
 
   getContract(name: string): ethers.Contract {
     return this.contracts[name];
+  }
+
+  async deployContract(
+    signerName: string,
+    contractName: string,
+    contractJsonPath: string,
+    ...constructorArgs: any[]
+  ): Promise<DeployedContractConfig> {
+    const signer = ProviderManager.getSigner(signerName);
+    const contractJson = JSON.parse(fs.readFileSync(contractJsonPath, "utf8"));
+    const factory = new ethers.ContractFactory(
+      contractJson.abi,
+      contractJson.bytecode,
+      signer
+    );
+    const contract = await factory.deploy(...constructorArgs);
+    await contract.waitForDeployment();
+
+    const deployedConfig: DeployedContractConfig = {
+      name: contractName,
+      address: await contract.getAddress(),
+      abi: path.basename(contractJsonPath).replace(".json", ".abi"),
+      provider: ProviderManager.getProviderName(
+        signer.provider as JsonRpcProvider
+      ),
+    };
+
+    // Save ABI to build directory
+    fs.writeFileSync(
+      path.resolve(
+        __dirname,
+        "../../build/../_build/contracts",
+        deployedConfig.abi
+      ),
+      JSON.stringify(contractJson.abi)
+    );
+
+    return deployedConfig;
   }
 }
 

@@ -4,7 +4,7 @@ import App from "../App";
 import path from "path";
 
 // Create a new instance of App with the path to the configuration file
-const app = new App(path.resolve("./config/config.json"));
+const app = new App(path.resolve("./src/config/config.json"));
 
 // Set the active provider (optional, defaults to the first provider in the config)
 app.setActiveProvider("tenderly");
@@ -13,8 +13,21 @@ app.setActiveProvider("tenderly");
 const transactionManager = app.transactionManager;
 const eventListener = app.eventListener;
 
-// Example transaction
 (async () => {
+  // Example contract deployment
+  try {
+    const deployedContract = await app.contractManager.deployContract(
+      "signer1",
+      "NewContract",
+      "./path_to_contract.json"
+    );
+    app.configManager.addContract(deployedContract);
+    console.log("Contract deployed and config updated:", deployedContract);
+  } catch (error) {
+    console.error("Contract deployment failed:", error);
+  }
+
+  // Example transaction
   try {
     const txReceipt = await transactionManager.sendTransaction(
       "MyContract",

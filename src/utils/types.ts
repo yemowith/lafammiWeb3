@@ -17,3 +17,5 @@ export interface SignerConfig {
   privateKey: string;
   provider: string;
 }
+
+export interface DeployedContractConfig extends ContractConfig {}

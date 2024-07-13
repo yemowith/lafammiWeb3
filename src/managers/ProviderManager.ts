@@ -15,6 +15,15 @@ class ProviderManager {
     return this.providers[name];
   }
 
+  getProviderName(provider: JsonRpcProvider): string {
+    for (const name in this.providers) {
+      if (this.providers[name] === provider) {
+        return name;
+      }
+    }
+    throw new Error("Provider not found");
+  }
+
   addSigner(config: SignerConfig) {
     const provider = this.getProvider(config.provider);
     if (!provider) {

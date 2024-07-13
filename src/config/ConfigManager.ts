@@ -1,9 +1,15 @@
 // src/config/ConfigManager.ts
 
-import { ProviderConfig, ContractConfig, SignerConfig } from "../utils/types";
+import {
+  ProviderConfig,
+  ContractConfig,
+  SignerConfig,
+  DeployedContractConfig,
+} from "../utils/types";
 import * as fs from "fs";
 
 class ConfigManager {
+  private configPath: string;
   private config: {
     providers: ProviderConfig[];
     contracts: ContractConfig[];
@@ -11,6 +17,7 @@ class ConfigManager {
   };
 
   constructor(configPath: string) {
+    this.configPath = configPath;
     const rawData = fs.readFileSync(configPath, "utf8");
     this.config = JSON.parse(rawData);
   }
@@ -25,6 +32,19 @@ class ConfigManager {
 
   getSigners(): SignerConfig[] {
     return this.config.signers;
+  }
+
+  addContract(contract: DeployedContractConfig) {
+    this.config.contracts.push(contract);
+    this.saveConfig();
+  }
+
+  private saveConfig() {
+    fs.writeFileSync(
+      this.configPath,
+      JSON.stringify(this.config, null, 2),
+      "utf8"
+    );
   }
 }
 
