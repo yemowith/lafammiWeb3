@@ -15,7 +15,8 @@
       "address": "0xYourContractAddress",
       "abi": "contracts_MyContract_sol_MyContract.abi",
       "provider": "tenderly"
-    }
+    },
+    "contracts_MyContract_sol_MyContract.abi"
   ],
   "signers": [
     {

@@ -23,6 +23,15 @@ var __importStar = (this && this.__importStar) || function (mod) {
     __setModuleDefault(result, mod);
     return result;
 };
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
@@ -43,6 +52,27 @@ class ContractManager {
     }
     getContract(name) {
         return this.contracts[name];
+    }
+    deployContract(signerName, contractName, contractJsonPath, ...constructorArgs) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const a = path.basename(contractJsonPath).replace(".json", ".abi");
+            console.log(a);
+            return a;
+            const signer = ProviderManager_1.default.getSigner(signerName);
+            const contractJson = JSON.parse(fs.readFileSync(contractJsonPath, "utf8"));
+            const factory = new ethers_1.ethers.ContractFactory(contractJson.abi, contractJson.bytecode, signer);
+            const contract = yield factory.deploy(...constructorArgs);
+            yield contract.waitForDeployment();
+            const deployedConfig = {
+                name: contractName,
+                address: yield contract.getAddress(),
+                abi: path.basename(contractJsonPath).replace(".json", ".abi"),
+                provider: ProviderManager_1.default.getProviderName(signer.provider),
+            };
+            // Save ABI to build directory
+            fs.writeFileSync(path.resolve(__dirname, "../../build/../_build/contracts", deployedConfig.abi), JSON.stringify(contractJson.abi));
+            return deployedConfig;
+        });
     }
 }
 exports.default = new ContractManager();

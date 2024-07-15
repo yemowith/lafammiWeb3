@@ -22,8 +22,17 @@ app.setActiveProvider("tenderly");
 // Initialize transaction manager and event listener with the app instance
 const transactionManager = app.transactionManager;
 const eventListener = app.eventListener;
-// Example transaction
 (() => __awaiter(void 0, void 0, void 0, function* () {
+    // Example contract deployment
+    try {
+        const deployedContract = yield app.contractManager.deployContract("signer1", "NewContract", "./_build/contracts/contracts_MyContract_sol_MyContract.abi");
+        app.configManager.addContract(deployedContract);
+        console.log("Contract deployed and config updated:", deployedContract);
+    }
+    catch (error) {
+        console.error("Contract deployment failed:", error);
+    }
+    // Example transaction
     try {
         const txReceipt = yield transactionManager.sendTransaction("MyContract", "someMethod", "signer1", 42);
         console.log("Transaction successful:", txReceipt);

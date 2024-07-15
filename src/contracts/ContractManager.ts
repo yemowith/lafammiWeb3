@@ -1,6 +1,6 @@
 // src/contracts/ContractManager.ts
 
-import { ethers, JsonRpcProvider } from "ethers";
+import { ethers, JsonRpcProvider, Wallet } from "ethers";
 import ProviderManager from "../managers/ProviderManager";
 import { ContractConfig, DeployedContractConfig } from "../utils/types";
 import * as fs from "fs";
@@ -34,13 +34,18 @@ class ContractManager {
     contractJsonPath: string,
     ...constructorArgs: any[]
   ): Promise<DeployedContractConfig> {
+    const a = path.basename(contractJsonPath).replace(".json", ".abi");
+    console.log(a);
+    return a as any;
     const signer = ProviderManager.getSigner(signerName);
     const contractJson = JSON.parse(fs.readFileSync(contractJsonPath, "utf8"));
+
     const factory = new ethers.ContractFactory(
       contractJson.abi,
       contractJson.bytecode,
       signer
     );
+
     const contract = await factory.deploy(...constructorArgs);
     await contract.waitForDeployment();
 

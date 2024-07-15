@@ -13,6 +13,14 @@ class ProviderManager {
     getProvider(name) {
         return this.providers[name];
     }
+    getProviderName(provider) {
+        for (const name in this.providers) {
+            if (this.providers[name] === provider) {
+                return name;
+            }
+        }
+        throw new Error("Provider not found");
+    }
     addSigner(config) {
         const provider = this.getProvider(config.provider);
         if (!provider) {

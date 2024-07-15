@@ -27,6 +27,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const fs = __importStar(require("fs"));
 class ConfigManager {
     constructor(configPath) {
+        this.configPath = configPath;
         const rawData = fs.readFileSync(configPath, "utf8");
         this.config = JSON.parse(rawData);
     }
@@ -38,6 +39,13 @@ class ConfigManager {
     }
     getSigners() {
         return this.config.signers;
+    }
+    addContract(contract) {
+        this.config.contracts.push(contract);
+        this.saveConfig();
+    }
+    saveConfig() {
+        fs.writeFileSync(this.configPath, JSON.stringify(this.config, null, 2), "utf8");
     }
 }
 exports.default = ConfigManager;
